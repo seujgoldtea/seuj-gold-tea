@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Seuj Gold Tea - Distributor Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7f5;
+      color: #17211c;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    /* LOGIN */
+
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        linear-gradient(135deg, #063e31, #0a5b43);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 20px 55px rgba(0,0,0,.22);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-title {
+      font-family: Georgia, serif;
+      font-size: 38px;
+      font-weight: bold;
+      color: #07513d;
+    }
+
+    .brand-title span {
+      color: #d3a234;
+    }
+
+    .brand-subtitle {
+      margin-top: 6px;
+      letter-spacing: 4px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .login-help {
+      text-align: center;
+      color: #66736c;
+      margin-bottom: 26px;
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #cfd8d3;
+      border-radius: 9px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #087a59;
+    }
+
+    .primary-btn {
+      border: none;
+      background: #086446;
+      color: white;
+      padding: 13px 20px;
+      border-radius: 9px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: 600;
+    }
+
+    .primary-btn:hover {
+      background: #064c36;
+    }
+
+    #loginError {
+      display: none;
+      margin-top: 15px;
+      padding: 11px;
+      background: #fff0f0;
+      color: #a01212;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    /* DASHBOARD */
+
+    #dashboard {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 235px;
+      background: #073f31;
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .side-brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .side-brand .brand-title {
+      color: white;
+      font-size: 30px;
+    }
+
+    .side-brand .brand-title span {
+      color: #e3b54a;
+    }
+
+    .side-brand .brand-subtitle {
+      color: #e7eee9;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      border: 0;
+      color: white;
+      background: transparent;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      background: #17684f;
+    }
+
+    .admin-user {
+      margin-top: 30px;
+      padding: 15px 8px;
+      border-top: 1px solid rgba(255,255,255,.18);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .signout-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.35);
+      background: transparent;
+      color: white;
+      cursor: pointer;
+    }
+
+    .main {
+      margin-left: 235px;
+      padding: 26px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .topbar h1 {
+      margin: 0 0 5px;
+      font-size: 29px;
+    }
+
+    .topbar p {
+      margin: 0;
+      color: #657169;
+    }
+
+    #currentDate {
+      text-align: right;
+      color: #56645c;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 13px;
+      padding: 19px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      border: 1px solid #e7ece9;
+    }
+
+    .stat-number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #56645c;
+    }
+
+    /* TABLE */
+
+    .panel {
+      background: white;
+      border-radius: 13px;
+      border: 1px solid #e3e8e5;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #edf0ee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      padding: 15px 20px;
+      border-bottom: 1px solid #edf0ee;
+    }
+
+    .filters input,
+    .filters select {
+      padding: 10px 11px;
+      border: 1px solid #ccd5d0;
+      border-radius: 8px;
+      background: white;
+    }
+
+    #searchInput {
+      min-width: 250px;
+      flex: 1;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    th,
+    td {
+      padding: 12px 13px;
+      border-bottom: 1px solid #edf0ee;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f7f9f8;
+      color: #34433a;
+    }
+
+    tr:hover td {
+      background: #fbfcfb;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 15px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .status-new {
+      background: #fff0bf;
+      color: #705100;
+    }
+
+    .status-processing {
+      background: #ddecff;
+      color: #005294;
+    }
+
+    .status-shipped {
+      background: #e9e1ff;
+      color: #5032a1;
+    }
+
+    .status-delivered {
+      background: #d9f3dd;
+      color: #116b27;
+    }
+
+    .status-cancelled {
+      background: #ffdede;
+      color: #a11c1c;
+    }
+
+    .payment-paid {
+      background: #d9f3dd;
+      color: #116b27;
+    }
+
+    .payment-pending {
+      background: #fff0bf;
+      color: #705100;
+    }
+
+    .view-btn {
+      background: white;
+      color: #075c42;
+      border: 1px solid #075c42;
+      padding: 7px 13px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    /* DETAILS */
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+    }
+
+    .order-details {
+      padding: 20px;
+    }
+
+    .detail-title {
+      color: #075c42;
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 17px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 14px;
+    }
+
+    .detail-label {
+      color: #68746d;
+    }
+
+    .empty {
+      padding: 35px;
+      text-align: center;
+      color: #6a756f;
+    }
+
+    #dashboardError {
+      display: none;
+      margin-bottom: 15px;
+      padding: 12px;
+      color: #9b1c1c;
+      background: #ffeded;
+      border-radius: 9px;
+    }
+
+    @media(max-width: 1150px) {
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media(max-width: 800px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+      }
+
+      #currentDate {
+        text-align: left;
+      }
+    }
+
+    @media(max-width: 520px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .main {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN SCREEN -->
+
+<div id="loginScreen">
+  <div class="login-card">
+
+    <div class="brand">
+      <div class="brand-title">Seuj <span>GOLD</span></div>
+      <div class="brand-subtitle">ASSAM CTC TEA</div>
+    </div>
+
+    <h2>Distributor Login</h2>
+
+    <div class="login-help">
+      Authorized Seuj Gold Tea administrators only
+    </div>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label for="email">User ID / Email</label>
+        <input
+          type="email"
+          id="email"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Login
+      </button>
+
+      <div id="loginError"></div>
+
+    </form>
+
+  </div>
+</div>
+
+
+<!-- ADMIN DASHBOARD -->
+
+<div id="dashboard">
+
+  <aside class="sidebar">
+
+    <div class="side-brand">
+      <div class="brand-title">Seuj <span>GOLD</span></div>
+      <div class="brand-subtitle">ASSAM CTC TEA</div>
+    </div>
+
+    <button class="nav-item active" data-filter="all">
+      Dashboard
+    </button>
+
+    <button class="nav-item" data-filter="all">
+      All Orders
+    </button>
+
+    <button class="nav-item" data-filter="new">
+      New Orders
+    </button>
+
+    <button class="nav-item" data-filter="processing">
+      Processing
+    </button>
+
+    <button class="nav-item" data-filter="shipped">
+      Shipped
+    </button>
+
+    <button class="nav-item" data-filter="delivered">
+      Delivered
+    </button>
+
+    <button class="nav-item" data-filter="cancelled">
+      Cancelled
+    </button>
+
+    <button class="nav-item" data-filter="all">
+      Order History
+    </button>
+
+    <div class="admin-user">
+      <strong>Distributor</strong>
+      <div id="adminEmail"></div>
+
+      <button id="signOutBtn" class="signout-btn">
+        Sign Out
+      </button>
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+        <h1>Welcome, Distributor</h1>
+        <p>
+          Manage Seuj Gold Tea orders, deliveries and customer information.
+        </p>
+      </div>
+
+      <div id="currentDate"></div>
+
+    </div>
+
+    <div id="dashboardError"></div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <div class="stat-number" id="newCount">0</div>
+        <div class="stat-label">New Orders</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="processingCount">0</div>
+        <div class="stat-label">Processing</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="shippedCount">0</div>
+        <div class="stat-label">Shipped</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="deliveredCount">0</div>
+        <div class="stat-label">Delivered</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="cancelledCount">0</div>
+        <div class="stat-label">Cancelled</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="totalCount">0</div>
+        <div class="stat-label">Total Orders</div>
+      </div>
+
+    </div>
+
+
+    <!-- ORDER HISTORY -->
+
+    <section class="panel">
+
+      <div class="panel-header">
+        <h2>Order History</h2>
+        <div id="orderCount"></div>
+      </div>
+
+      <div class="filters">
+
+        <select id="statusFilter">
+          <option value="all">All Orders</option>
+          <option value="new">New Orders</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        <select id="paymentFilter">
+          <option value="all">All Payments</option>
+          <option value="cod">COD</option>
+          <option value="online">Online</option>
+        </select>
+
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search by Order ID, customer or mobile..."
+        >
+
+      </div>
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date & Time</th>
+              <th>Customer</th>
+              <th>Mobile</th>
+              <th>Pack</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Payment Status</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="ordersBody">
+            <tr>
+              <td colspan="11" class="empty">
+                Loading orders...
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- DETAILS -->
+
+    <div class="details-grid">
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Selected Order</h2>
+        </div>
+
+        <div id="orderDetails" class="empty">
+          Select an order using the View button.
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script type="module">
+
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqctVB4XVYJIBnCP84vaIUbL_0vl0j6S0",
+    authDomain: "seuj-gold-tea.firebaseapp.com",
+    projectId: "seuj-gold-tea",
+    storageBucket: "seuj-gold-tea.firebasestorage.app",
+    messagingSenderId: "50849209323",
+    appId: "1:50849209323:web:509d428507c3d07e7a57ae"
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const API =
+    "https://seuj-gold-tea-ai-backend.onrender.com";
+
+
+  const loginScreen =
+    document.getElementById("loginScreen");
+
+  const dashboard =
+    document.getElementById("dashboard");
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  const loginError =
+    document.getElementById("loginError");
+
+  const dashboardError =
+    document.getElementById("dashboardError");
+
+  const ordersBody =
+    document.getElementById("ordersBody");
+
+
+  let allOrders = [];
+
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+
+  function normalizeStatus(status) {
+
+    const s =
+      String(status || "")
+        .trim()
+        .toLowerCase();
+
+    if (
+      s.includes("received") ||
+      s.includes("new")
+    ) {
+      return "new";
+    }
+
+    if (
+      s.includes("process") ||
+      s.includes("packed") ||
+      s.includes("confirm")
+    ) {
+      return "processing";
+    }
+
+    if (
+      s.includes("ship") ||
+      s.includes("transit") ||
+      s.includes("out for delivery")
+    ) {
+      return "shipped";
+    }
+
+    if (s.includes("deliver")) {
+      return "delivered";
+    }
+
+    if (
+      s.includes("cancel") ||
+      s.includes("refund")
+    ) {
+      return "cancelled";
+    }
+
+    return "new";
+  }
+
+
+  function statusClass(status) {
+
+    return "status-" +
+      normalizeStatus(status);
+  }
+
+
+  function formatMoney(value) {
+
+    return "₹" +
+      Number(value || 0)
+        .toLocaleString(
+          "en-IN",
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        );
+  }
+
+
+  function formatDate(value) {
+
+    if (!value) return "-";
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return "-";
+    }
+
+    return date.toLocaleString(
+      "en-IN",
+      {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }
+    );
+  }
+
+
+  function updateStats() {
+
+    const counts = {
+      new: 0,
+      processing: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0
+    };
+
+    allOrders.forEach(order => {
+
+      const status =
+        normalizeStatus(
+          order.orderStatus
+        );
+
+      if (
+        counts[status] !== undefined
+      ) {
+        counts[status]++;
+      }
+    });
+
+    document.getElementById(
+      "newCount"
+    ).textContent = counts.new;
+
+    document.getElementById(
+      "processingCount"
+    ).textContent = counts.processing;
+
+    document.getElementById(
+      "shippedCount"
+    ).textContent = counts.shipped;
+
+    document.getElementById(
+      "deliveredCount"
+    ).textContent = counts.delivered;
+
+    document.getElementById(
+      "cancelledCount"
+    ).textContent = counts.cancelled;
+
+    document.getElementById(
+      "totalCount"
+    ).textContent = allOrders.length;
+  }
+
+
+  function getFilteredOrders() {
+
+    const status =
+      document.getElementById(
+        "statusFilter"
+      ).value;
+
+    const payment =
+      document.getElementById(
+        "paymentFilter"
+      ).value;
+
+    const search =
+      document.getElementById(
+        "searchInput"
+      ).value
+        .trim()
+        .toLowerCase();
+
+
+    return allOrders.filter(order => {
+
+      const normalizedStatus =
+        normalizeStatus(
+          order.orderStatus
+        );
+
+
+      if (
+        status !== "all" &&
+        normalizedStatus !== status
+      ) {
+        return false;
+      }
+
+
+      const method =
+        String(
+          order.paymentMethod || ""
+        )
+          .toLowerCase();
+
+
+      if (
+        payment === "cod" &&
+        !method.includes("cod")
+      ) {
+        return false;
+      }
+
+
+      if (
+        payment === "online" &&
+        method.includes("cod")
+      ) {
+        return false;
+      }
+
+
+      if (search) {
+
+        const haystack = [
+          order.orderId,
+          order.customerName,
+          order.mobile
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        if (
+          !haystack.includes(search)
+        ) {
+          return false;
+        }
+      }
+
+
+      return true;
+    });
+  }
+
+
+  function renderOrders() {
+
+    const orders =
+      getFilteredOrders();
+
+    document.getElementById(
+      "orderCount"
+    ).textContent =
+      `${orders.length} order(s)`;
+
+
+    if (!orders.length) {
+
+      ordersBody.innerHTML = `
+        <tr>
+          <td
+            colspan="11"
+            class="empty"
+          >
+            No orders found.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+
+    ordersBody.innerHTML =
+      orders.map(order => {
+
+        const status =
+          order.orderStatus ||
+          "Order received";
+
+        const paymentStatus =
+          order.paymentStatus ||
+          "Pending";
+
+        const paid =
+          String(paymentStatus)
+            .toLowerCase()
+            .includes("paid");
+
+        return `
+          <tr>
+
+            <td>
+              <strong>
+                ${escapeHtml(order.orderId)}
+              </strong>
+            </td>
+
+            <td>
+              ${escapeHtml(
+                formatDate(order.createdAt)
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.customerName
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.mobile
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.pack
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.quantity
+              )}
+            </td>
+
+            <td>
+              <strong>
+                ${formatMoney(order.total)}
+              </strong>
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.paymentMethod
+              )}
+            </td>
+
+            <td>
+              <span class="status ${
+                paid
+                  ? "payment-paid"
+                  : "payment-pending"
+              }">
+                ${escapeHtml(
+                  paymentStatus
+                )}
+              </span>
+            </td>
+
+            <td>
+              <span class="
+                status
+                ${statusClass(status)}
+              ">
+                ${escapeHtml(status)}
+              </span>
+            </td>
+
+            <td>
+              <button
+                class="view-btn"
+                data-order-id="${escapeHtml(
+                  order.orderId
+                )}"
+              >
+                View
+              </button>
+            </td>
+
+          </tr>
+        `;
+      }).join("");
+
+
+    document
+      .querySelectorAll(
+        ".view-btn"
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            showOrderDetails(
+              button.dataset.orderId
+            );
+          }
+        );
+      });
+  }
+
+
+  function showOrderDetails(
+    orderId
+  ) {
+
+    const order =
+      allOrders.find(
+        item =>
+          item.orderId === orderId
+      );
+
+    if (!order) return;
+
+
+    document.getElementById(
+      "orderDetails"
+    ).className =
+      "order-details";
+
+
+    document.getElementById(
+      "orderDetails"
+    ).innerHTML = `
+
+      <div class="detail-title">
+        ${escapeHtml(
+          order.orderId
+        )}
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Order Date
+        </div>
+        <div>
+          ${escapeHtml(
+            formatDate(
+              order.createdAt
+            )
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Customer
+        </div>
+        <div>
+          ${escapeHtml(
+            order.customerName
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Mobile
+        </div>
+        <div>
+          ${escapeHtml(
+            order.mobile
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Address
+        </div>
+        <div>
+          ${escapeHtml(
+            order.address
+          )}<br>
+
+          ${escapeHtml(
+            order.city
+          )},
+          ${escapeHtml(
+            order.state
+          )}
+          -
+          ${escapeHtml(
+            order.deliveryPincode
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Pack & Quantity
+        </div>
+        <div>
+          ${escapeHtml(
+            order.pack
+          )}
+          ×
+          ${escapeHtml(
+            order.quantity
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Product Subtotal
+        </div>
+        <div>
+          ${formatMoney(
+            order.subtotal
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Delivery Charge
+        </div>
+        <div>
+          ${formatMoney(
+            order.shippingCharge
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Total Amount
+        </div>
+        <div>
+          <strong>
+            ${formatMoney(
+              order.total
+            )}
+          </strong>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Payment Method
+        </div>
+        <div>
+          ${escapeHtml(
+            order.paymentMethod
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Payment Status
+        </div>
+        <div>
+          ${escapeHtml(
+            order.paymentStatus
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Courier
+        </div>
+        <div>
+          ${escapeHtml(
+            order.courier
+          )}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Estimated Delivery
+        </div>
+        <div>
+          ${escapeHtml(
+            order.estimatedDays
+          )}
+          day(s)
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">
+          Order Status
+        </div>
+        <div>
+          <strong>
+            ${escapeHtml(
+              order.orderStatus
+            )}
+          </strong>
+        </div>
+      </div>
+    `;
+  }
+
+
+  async function loadOrders(user) {
+
+    dashboardError.style.display =
+      "none";
+
+    try {
+
+      const token =
+        await user.getIdToken();
+
+
+      const response =
+        await fetch(
+          `${API}/api/admin/orders`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`
+            }
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          await signOut(auth);
+
+          throw new Error(
+            data.error ||
+            "Admin access denied"
+          );
+        }
+
+        throw new Error(
+          data.error ||
+          "Unable to load orders"
+        );
+      }
+
+
+      allOrders =
+        Array.isArray(data.orders)
+          ? data.orders
+          : [];
+
+
+      updateStats();
+      renderOrders();
+
+    } catch (error) {
+
+      console.error(error);
+
+      dashboardError.textContent =
+        error.message ||
+        "Unable to load dashboard.";
+
+      dashboardError.style.display =
+        "block";
+    }
+  }
+
+
+  loginForm.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      loginError.style.display =
+        "none";
+
+
+      const email =
+        document.getElementById(
+          "email"
+        ).value.trim();
+
+      const password =
+        document.getElementById(
+          "password"
+        ).value;
+
+
+      try {
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+        loginError.textContent =
+          "Invalid User ID or password.";
+
+        loginError.style.display =
+          "block";
+      }
+    }
+  );
+
+
+  onAuthStateChanged(
+    auth,
+    async user => {
+
+      if (!user) {
+
+        dashboard.style.display =
+          "none";
+
+        loginScreen.style.display =
+          "flex";
+
+        return;
+      }
+
+
+      loginScreen.style.display =
+        "none";
+
+      dashboard.style.display =
+        "block";
+
+
+      document.getElementById(
+        "adminEmail"
+      ).textContent =
+        user.email || "";
+
+
+      await loadOrders(user);
+    }
+  );
+
+
+  document.getElementById(
+    "signOutBtn"
+  ).addEventListener(
+    "click",
+    () => signOut(auth)
+  );
+
+
+  document.getElementById(
+    "statusFilter"
+  ).addEventListener(
+    "change",
+    renderOrders
+  );
+
+
+  document.getElementById(
+    "paymentFilter"
+  ).addEventListener(
+    "change",
+    renderOrders
+  );
+
+
+  document.getElementById(
+    "searchInput"
+  ).addEventListener(
+    "input",
+    renderOrders
+  );
+
+
+  document
+    .querySelectorAll(
+      ".nav-item"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(
+              ".nav-item"
+            )
+            .forEach(item =>
+              item.classList.remove(
+                "active"
+              )
+            );
+
+          button.classList.add(
+            "active"
+          );
+
+
+          const filter =
+            button.dataset.filter ||
+            "all";
+
+          document.getElementById(
+            "statusFilter"
+          ).value = filter;
+
+          renderOrders();
+        }
+      );
+    });
+
+
+  const now =
+    new Date();
+
+  document.getElementById(
+    "currentDate"
+  ).innerHTML =
+    now.toLocaleDateString(
+      "en-IN",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    ) +
+    "<br>" +
+    now.toLocaleTimeString(
+      "en-IN",
+      {
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+
+</script>
+
+</body>
+</html>
