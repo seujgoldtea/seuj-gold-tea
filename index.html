@@ -962,11 +962,30 @@ body{overflow-x:hidden}
   border-radius:12px;
   background:#f7f1e5;
 }
+.ai-reply-label{
+  font-weight:800;
+  color:#173b2c;
+  margin-bottom:5px;
+  font-size:13px;
+}
 .ai-reply-text{
   color:#38483f;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
+
+
+
+/* Ordering & tracking */
+.order-section{padding:72px 0;background:#fffaf0;color:#173b2c}
+.order-head{max-width:760px;margin:0 auto 28px;text-align:center}.order-head p{color:#53645c}
+.order-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}
+.order-card{background:#fff;border:1px solid #dcccae;border-radius:22px;padding:24px;box-shadow:0 10px 30px #173b2c0b}
+.order-card h3{margin:0 0 16px;color:#173b2c;font-size:25px}.order-form label{display:block;font-weight:700;margin:13px 0 6px}
+.order-form input,.order-form select,.order-form textarea{width:100%;max-width:none;border:1px solid #cfc6b6;border-radius:12px;padding:12px 13px;font:inherit;color:#173b2c;background:#fff}
+.order-form textarea{min-height:90px;resize:vertical}.order-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.order-btn{border:0;border-radius:999px;padding:12px 19px;background:#d1a452;color:#173b2c;font-weight:800;cursor:pointer;margin-top:16px}.order-btn.secondary{background:#173b2c;color:#fff}.order-btn:disabled{opacity:.6;cursor:not-allowed}
+.order-summary{margin-top:16px;padding:15px;border-radius:14px;background:#f7f1e5;display:none}.order-summary.show{display:block}.summary-line{display:flex;justify-content:space-between;gap:15px;padding:5px 0}.summary-total{font-size:18px;font-weight:900;border-top:1px solid #dcccae;margin-top:7px;padding-top:10px}.order-status{min-height:24px;margin-top:12px;font-weight:700;overflow-wrap:anywhere}.order-success{margin-top:16px;padding:16px;border-radius:14px;background:#eef7ef;border:1px solid #b9d6bc;display:none}.order-success.show{display:block}.order-id{font-size:19px;font-weight:900;overflow-wrap:anywhere}.track-result{margin-top:16px;padding:16px;border-radius:14px;background:#f7f1e5;display:none}.track-result.show{display:block}.cod-note{font-size:13px;color:#68766d;margin-top:8px}
+@media(max-width:800px){.order-grid{grid-template-columns:1fr}}@media(max-width:600px){.order-section{padding:52px 0}.order-card{padding:18px}.order-row{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -986,6 +1005,8 @@ body{overflow-x:hidden}
         <a href="#story" data-k="storyNav">Our Story</a>
         <a href="#brew" data-k="brewNav">How to Brew</a>
         <a href="#product" data-k="productNav">Product</a>
+        <a href="#order" data-o="orderNav">Order</a>
+        <a href="#track-order" data-o="trackNav">Track</a>
         <a class="cta" href="#enquire" data-k="enquireNav">Enquire</a>
       </div>
       <div class="langbar">
@@ -1112,6 +1133,58 @@ body{overflow-x:hidden}
 </section>
 </main>
 
+
+
+<section id="order" class="order-section">
+  <div class="wrap">
+    <div class="order-head">
+      <div class="section-kicker" data-o="orderKicker">Order Seuj Gold</div>
+      <h2 data-o="orderTitle">Order Assam tea at your doorstep.</h2>
+      <p data-o="orderIntro">Choose your pack, check the live delivery charge and place a Cash on Delivery order.</p>
+    </div>
+    <div class="order-grid">
+      <div class="order-card">
+        <h3 data-o="placeOrder">Place Order</h3>
+        <form id="orderForm" class="order-form">
+          <div class="order-row">
+            <div><label for="orderPack" data-o="pack">Pack size</label><select id="orderPack" required><option value="250g">250 g — ₹150</option><option value="500g">500 g — ₹280</option><option value="1kg">1 kg — ₹520</option></select></div>
+            <div><label for="orderQty" data-o="quantity">Quantity</label><input id="orderQty" type="number" min="1" max="20" value="1" required></div>
+          </div>
+          <label for="orderName" data-o="name">Customer name</label><input id="orderName" type="text" maxlength="80" autocomplete="name" required>
+          <label for="orderMobile" data-o="mobile">Mobile number</label><input id="orderMobile" type="tel" inputmode="numeric" maxlength="13" autocomplete="tel" placeholder="10-digit Indian mobile number" required>
+          <label for="orderAddress" data-o="address">Delivery address</label><textarea id="orderAddress" maxlength="300" autocomplete="street-address" required></textarea>
+          <div class="order-row">
+            <div><label for="orderCity" data-o="city">City</label><input id="orderCity" type="text" maxlength="80" autocomplete="address-level2" required></div>
+            <div><label for="orderState" data-o="state">State</label><input id="orderState" type="text" maxlength="80" autocomplete="address-level1" required></div>
+          </div>
+          <label for="orderPin" data-o="pincode">Delivery PIN code</label><input id="orderPin" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code" required>
+          <div class="cod-note" data-o="codOnly">Payment: Cash on Delivery (COD)</div>
+          <button id="checkDeliveryBtn" class="order-btn secondary" type="button" data-o="checkDelivery">Check Delivery</button>
+          <div id="deliverySummary" class="order-summary" aria-live="polite">
+            <div class="summary-line"><span data-o="subtotal">Subtotal</span><strong id="summarySubtotal">—</strong></div>
+            <div class="summary-line"><span data-o="shipping">Delivery charge</span><strong id="summaryShipping">—</strong></div>
+            <div class="summary-line"><span data-o="courier">Courier</span><strong id="summaryCourier">—</strong></div>
+            <div class="summary-line"><span data-o="estimated">Estimated delivery</span><strong id="summaryEta">—</strong></div>
+            <div class="summary-line summary-total"><span data-o="total">Total</span><strong id="summaryTotal">—</strong></div>
+          </div>
+          <button id="placeOrderBtn" class="order-btn" type="submit" disabled data-o="placeOrderBtn">Place COD Order</button>
+          <div id="orderStatus" class="order-status" role="status" aria-live="polite"></div>
+          <div id="orderSuccess" class="order-success"><div data-o="orderSuccess">Order placed successfully. Save your Order ID:</div><div id="newOrderId" class="order-id"></div></div>
+        </form>
+      </div>
+      <div class="order-card" id="track-order">
+        <h3 data-o="trackTitle">Track Order</h3>
+        <form id="trackForm" class="order-form">
+          <label for="trackOrderId" data-o="orderId">Order ID</label><input id="trackOrderId" type="text" placeholder="SGT-YYYYMMDD-XXXXXX" required>
+          <label for="trackMobile" data-o="mobile">Mobile number</label><input id="trackMobile" type="tel" inputmode="numeric" maxlength="13" required>
+          <button id="trackBtn" class="order-btn secondary" type="submit" data-o="trackBtn">Track Order</button>
+          <div id="trackStatus" class="order-status" role="status" aria-live="polite"></div>
+          <div id="trackResult" class="track-result"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="reviews" class="reviews-section">
   <div class="wrap">
@@ -1294,6 +1367,28 @@ applyLang("en");
 
 
 
+
+<script>
+(function(){
+const API="https://seuj-gold-tea-ai-backend.onrender.com";
+const PRODUCTS={"250g":{price:150,weight:.25},"500g":{price:280,weight:.5},"1kg":{price:520,weight:1}};
+const O={
+ en:{orderNav:"Order",trackNav:"Track",orderKicker:"Order Seuj Gold",orderTitle:"Order Assam tea at your doorstep.",orderIntro:"Choose your pack, check the live delivery charge and place a Cash on Delivery order.",placeOrder:"Place Order",pack:"Pack size",quantity:"Quantity",name:"Customer name",mobile:"Mobile number",address:"Delivery address",city:"City",state:"State",pincode:"Delivery PIN code",codOnly:"Payment: Cash on Delivery (COD)",checkDelivery:"Check Delivery",subtotal:"Subtotal",shipping:"Delivery charge",courier:"Courier",estimated:"Estimated delivery",total:"Total",placeOrderBtn:"Place COD Order",orderSuccess:"Order placed successfully. Save your Order ID:",trackTitle:"Track Order",orderId:"Order ID",trackBtn:"Track Order"},
+ hi:{orderNav:"ऑर्डर",trackNav:"ट्रैक",orderKicker:"Seuj Gold ऑर्डर करें",orderTitle:"असम चाय अपने घर मंगाएं।",orderIntro:"पैक चुनें, लाइव डिलीवरी शुल्क देखें और कैश ऑन डिलीवरी ऑर्डर करें।",placeOrder:"ऑर्डर करें",pack:"पैक साइज",quantity:"मात्रा",name:"ग्राहक का नाम",mobile:"मोबाइल नंबर",address:"डिलीवरी पता",city:"शहर",state:"राज्य",pincode:"डिलीवरी पिन कोड",codOnly:"भुगतान: कैश ऑन डिलीवरी (COD)",checkDelivery:"डिलीवरी जांचें",subtotal:"उप-योग",shipping:"डिलीवरी शुल्क",courier:"कूरियर",estimated:"अनुमानित डिलीवरी",total:"कुल",placeOrderBtn:"COD ऑर्डर करें",orderSuccess:"ऑर्डर सफल हुआ। अपना ऑर्डर ID सुरक्षित रखें:",trackTitle:"ऑर्डर ट्रैक करें",orderId:"ऑर्डर ID",trackBtn:"ट्रैक करें"},
+ as:{orderNav:"অৰ্ডাৰ",trackNav:"ট্ৰেক",orderKicker:"Seuj Gold অৰ্ডাৰ কৰক",orderTitle:"অসম চাহ আপোনাৰ ঘৰলৈ অৰ্ডাৰ কৰক।",orderIntro:"পেক বাছক, লাইভ ডেলিভাৰী মাচুল চাওক আৰু Cash on Delivery অৰ্ডাৰ কৰক।",placeOrder:"অৰ্ডাৰ কৰক",pack:"পেকৰ আকাৰ",quantity:"পৰিমাণ",name:"গ্ৰাহকৰ নাম",mobile:"মোবাইল নম্বৰ",address:"ডেলিভাৰী ঠিকনা",city:"চহৰ",state:"ৰাজ্য",pincode:"ডেলিভাৰী পিন কোড",codOnly:"পেমেণ্ট: Cash on Delivery (COD)",checkDelivery:"ডেলিভাৰী চাওক",subtotal:"উপ-মুঠ",shipping:"ডেলিভাৰী মাচুল",courier:"কুৰিয়াৰ",estimated:"আনুমানিক ডেলিভাৰী",total:"মুঠ",placeOrderBtn:"COD অৰ্ডাৰ কৰক",orderSuccess:"অৰ্ডাৰ সফল। আপোনাৰ Order ID সংৰক্ষণ কৰক:",trackTitle:"অৰ্ডাৰ ট্ৰেক কৰক",orderId:"Order ID",trackBtn:"ট্ৰেক কৰক"}
+};
+function lang(){return document.getElementById("lang")?.value||"en"}function tx(k){return (O[lang()]||O.en)[k]||O.en[k]||k}
+function applyOrderLang(){const d=O[lang()]||O.en;document.querySelectorAll("[data-o]").forEach(el=>{const k=el.dataset.o;if(d[k]||O.en[k])el.textContent=d[k]||O.en[k]})}
+document.getElementById("lang")?.addEventListener("change",applyOrderLang);applyOrderLang();
+const pack=document.getElementById("orderPack"),qty=document.getElementById("orderQty"),pin=document.getElementById("orderPin"),check=document.getElementById("checkDeliveryBtn"),place=document.getElementById("placeOrderBtn"),sum=document.getElementById("deliverySummary"),status=document.getElementById("orderStatus");let rateOK=false;
+function invalidate(){rateOK=false;place.disabled=true;sum.classList.remove("show");status.textContent=""}pack.addEventListener("change",invalidate);qty.addEventListener("input",invalidate);pin.addEventListener("input",invalidate);
+check.addEventListener("click",async()=>{const q=Number(qty.value),p=pin.value.trim(),prod=PRODUCTS[pack.value];if(!/^\d{6}$/.test(p)||!Number.isInteger(q)||q<1||q>20){status.textContent="Please enter a valid 6-digit PIN code and quantity.";return}check.disabled=true;check.textContent="Processing…";status.textContent="";try{const r=await fetch(API+"/api/shipping/rates",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({deliveryPincode:p,weight:prod.weight*q,cod:true})});const d=await r.json();if(!r.ok||!d.ok||d.serviceable===false)throw new Error(d.error||"Delivery is unavailable for this PIN code.");const sub=prod.price*q,ship=Number(d.shippingCharge||0);document.getElementById("summarySubtotal").textContent="₹"+sub.toFixed(2);document.getElementById("summaryShipping").textContent="₹"+ship.toFixed(2);document.getElementById("summaryCourier").textContent=d.courier||"—";document.getElementById("summaryEta").textContent=d.estimatedDays?d.estimatedDays+" day(s)":"—";document.getElementById("summaryTotal").textContent="₹"+(sub+ship).toFixed(2);sum.classList.add("show");rateOK=true;place.disabled=false}catch(e){invalidate();status.textContent=e.message||"Unable to check delivery. Please try again."}finally{check.disabled=false;check.textContent=tx("checkDelivery")}});
+document.getElementById("orderForm").addEventListener("submit",async e=>{e.preventDefault();if(!rateOK){status.textContent="Please check delivery first.";return}place.disabled=true;place.textContent="Processing…";status.textContent="";document.getElementById("orderSuccess").classList.remove("show");try{const body={pack:pack.value,quantity:Number(qty.value),customerName:document.getElementById("orderName").value.trim(),mobile:document.getElementById("orderMobile").value.trim(),address:document.getElementById("orderAddress").value.trim(),city:document.getElementById("orderCity").value.trim(),state:document.getElementById("orderState").value.trim(),deliveryPincode:pin.value.trim()};const r=await fetch(API+"/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||"Unable to place order.");document.getElementById("newOrderId").textContent=d.orderId;document.getElementById("orderSuccess").classList.add("show");document.getElementById("trackOrderId").value=d.orderId;document.getElementById("trackMobile").value=body.mobile;document.getElementById("summarySubtotal").textContent="₹"+Number(d.subtotal).toFixed(2);document.getElementById("summaryShipping").textContent="₹"+Number(d.shippingCharge).toFixed(2);document.getElementById("summaryTotal").textContent="₹"+Number(d.total).toFixed(2);status.textContent=""}catch(e){status.textContent=e.message||"Unable to place order. Please try again.";place.disabled=false}finally{place.textContent=tx("placeOrderBtn")}});
+document.getElementById("trackForm").addEventListener("submit",async e=>{e.preventDefault();const btn=document.getElementById("trackBtn"),st=document.getElementById("trackStatus"),out=document.getElementById("trackResult");btn.disabled=true;btn.textContent="Processing…";st.textContent="";out.classList.remove("show");try{const r=await fetch(API+"/api/orders/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({orderId:document.getElementById("trackOrderId").value.trim(),mobile:document.getElementById("trackMobile").value.trim()})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||"Order not found.");out.innerHTML=`<div class="summary-line"><span>${tx("orderId")}</span><strong>${escapeHTML(d.orderId)}</strong></div><div class="summary-line"><span>${tx("pack")}</span><strong>${escapeHTML(d.pack)} × ${Number(d.quantity)||0}</strong></div><div class="summary-line"><span>Status</span><strong>${escapeHTML(d.orderStatus||"—")}</strong></div><div class="summary-line"><span>${tx("courier")}</span><strong>${escapeHTML(d.courier||"—")}</strong></div><div class="summary-line"><span>${tx("estimated")}</span><strong>${d.estimatedDays?escapeHTML(d.estimatedDays)+" day(s)":"—"}</strong></div><div class="summary-line summary-total"><span>${tx("total")}</span><strong>₹${Number(d.total||0).toFixed(2)}</strong></div>`;out.classList.add("show")}catch(e){st.textContent=e.message||"Unable to track order."}finally{btn.disabled=false;btn.textContent=tx("trackBtn")}});
+function escapeHTML(v){return String(v??"").replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#039;"}[c]))}
+})();
+</script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import {
@@ -1424,6 +1519,7 @@ function renderReview(docSnap) {
       ${dateText ? `<div class="public-review-date">${escapeHtml(dateText)}</div>` : ""}
       ${safeReply ? `
         <div class="ai-reply">
+          <div class="ai-reply-label">Automated response from Seuj Gold Tea</div>
           <div class="ai-reply-text">${safeReply}</div>
         </div>
       ` : ""}
